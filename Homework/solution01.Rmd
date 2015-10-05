@@ -31,7 +31,7 @@ ggplot(heights, aes(x=Husband, y=Wife)) + geom_point() + geom_smooth(method="lm"
 
 Korzystająć z metody pokazanej na wykłdzie obliczam przedział ufności korzystająć z metody bootstrapowej
 ```{r}
-N <- 5000
+N <- 10000
 results <- replicate(N, {
   data <- data.frame(x = heights$Husband,
                     y = model$fitted.values + sample(model$residuals))
@@ -47,25 +47,18 @@ quantile(results[2,], c(0.025,0.975))
 
 
 Wiemy, że regresja liniowa nie jest symetryczna, zatem wyznaczmy również przedział ufności po zamianie zmiennej objaśniającej.
-
+Powtarzając te same kroki...
 
 
 ```{r}
 model <- lm(Husband~Wife, data=heights)
 model
-```  
-
-Rysuję jak wygląda prosta regresji na płaszczyźnie.
-
-```{r}
-library(ggplot2)
-ggplot(heights, aes(x=Wife, y=Husband)) + geom_point() + geom_smooth(method="lm", formula=y~x, se = F)
 ```
 
-
-Korzystająć z metody pokazanej na wykłdzie obliczam przedział ufności korzystająć z metody bootstrapowej
 ```{r}
-N <- 5000
+ggplot(heights, aes(x=Wife, y=Husband)) + geom_point() + geom_smooth(method="lm", formula=y~x, se = F)
+
+N <- 10000
 results2 <- replicate(N, {
   data <- data.frame(x = heights$Wife,
                     y = model$fitted.values + sample(model$residuals))
@@ -74,7 +67,7 @@ results2 <- replicate(N, {
 })
 ```
 
-I teraz możemy wyznaczyć przedział ufności
+Przedział ufności z zamienioną zmienną objaśniającą i objaśnianą wynosi
 ```{r}
 quantile(results2[2,], c(0.025,0.975))
 ```
